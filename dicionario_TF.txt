@@ -1,0 +1,9 @@
+Canais:
+cons0 - console
+cons1 - console
+
+chan0A - nodo2hub
+chan1A - nodo2hub
+
+chan0B - hub2nodo
+chan1B - hub2nodo
