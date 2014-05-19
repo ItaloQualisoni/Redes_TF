@@ -44,6 +44,7 @@ public class Router implements CSProcess {
 		System.out.println("Roteador "+this.hostName);
 		System.out.println("Inicio do roteamento do pacote de "+pkt.data);
 		Route aux = table.getRoute(pkt.dstMacAddr);		
+		
 		if(aux==null){
 			return;
 		}
