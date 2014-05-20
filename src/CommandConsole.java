@@ -110,8 +110,8 @@ public class CommandConsole implements CSProcess {
 		if (params.length < 2)
 			System.out.println("Parametros informados de maneira incorreta.");
 		else {
-			System.out.println(params[0]);
-			System.out.println(params[1]);
+			//System.out.println(params[0]);
+			///System.out.println(params[1]);
 			cmdw = new CommandWrapper(Commands.SENDMSG, params[0], params[1]);
 			channel.write(cmdw);
 		}

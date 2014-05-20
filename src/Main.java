@@ -13,7 +13,8 @@ import org.jcsp.lang.Parallel;
 public class Main {
 
 	public static void main(String[] args) {
-
+		//TODO Implementar o MTU !
+		//Quem sabe criar uma classe que tenha o MTU e englobe os Channels
 		// Canais para comunicacao da console de comando com os nodos.
 		final One2OneChannel cons0 = Channel.one2one();
 		final One2OneChannel cons1 = Channel.one2one();
@@ -34,7 +35,6 @@ public class Main {
 		
 		// Canais para comunicacao dos router para router.
 		final One2OneChannel chanR0 = Channel.one2one();
-		
 		final One2OneChannel chanR1 = Channel.one2one();
 
 		
