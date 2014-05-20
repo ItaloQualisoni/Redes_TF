@@ -18,14 +18,27 @@ public class Main {
 		// Canais para comunicacao da console de comando com os nodos.
 		final One2OneChannel cons0 = Channel.one2one();
 		final One2OneChannel cons1 = Channel.one2one();
+		final One2OneChannel cons2 = Channel.one2one();
 
 		// Canais para comunicacao dos nodos com o hub.
 		final One2OneChannel chan0A = Channel.one2one();
 		final One2OneChannel chan1A = Channel.one2one();
+		final One2OneChannel chan2A = Channel.one2one();
 
 		// Canais para comunicacao do hub com os nodos.
 		final One2OneChannel chan0B = Channel.one2one();
 		final One2OneChannel chan1B = Channel.one2one();
+		final One2OneChannel chan2B = Channel.one2one();
+		
+		// Canais para comunicacao dos router para router.
+		final One2OneChannel chanR0_A = Channel.one2one();
+		final One2OneChannel chanR0_B = Channel.one2one();
+		
+		final One2OneChannel chanR1_A = Channel.one2one();
+		final One2OneChannel chanR1_B = Channel.one2one();
+		
+		String macRouter0 = "00:00:00:00:00:R0";
+		String macRouter1 = "00:00:00:00:00:R1";
 		
 		//in() entra
 		//out() saí
@@ -33,36 +46,45 @@ public class Main {
 		// Instanciacao dos processos Nodos.
 		CSProcess node0 = new Node("Node 0", "00:00:00:00:00:A1", chan0A.in(), cons0.in(), chan0B.out());
 		CSProcess node1 = new Node("Node 1", "00:00:00:00:00:B2", chan1A.in(), cons1.in(), chan1B.out());
+		CSProcess node2 = new Node("Node 2", "00:00:00:00:00:C3", chan2A.in(), cons2.in(), chan2B.out());
 		
 		//Tabela de roteamento
 		
 		RouterTable rt = new RouterTable();
 		rt.addRoute(new Route("00:00:00:00:00:A1", 0, "00:00:00:00:00:A1"));
 		rt.addRoute(new Route("00:00:00:00:00:B2", 1, "00:00:00:00:00:B2"));
+		rt.addRoute(new Route("00:00:00:00:00:C3", 2, macRouter1));
 		
-		ChannelOutput[] routerOuts = { chan0A.out(), chan1A.out()};
-		AltingChannelInput[] routerIns = { chan0B.in(), chan1B.in()};
+		ChannelOutput[] routerOuts = { chan0A.out(), chan1A.out(), chanR1_A.out()};
+		AltingChannelInput[] routerIns = { chan0B.in(), chan1B.in(),chanR1_B.in()};
 		
-		CSProcess router = new Router("Roter R0", "00:00:00:00:00:R0", routerIns, routerOuts, rt);
+		CSProcess router = new Router("Roter R0", macRouter0, routerIns, routerOuts, rt);
 
+		RouterTable rt1 = new RouterTable();
+		rt.addRoute(new Route("00:00:00:00:00:A1", 0, macRouter0));
+		rt.addRoute(new Route("00:00:00:00:00:B2", 0, macRouter0));
+		rt.addRoute(new Route("00:00:00:00:00:C3", 1, "00:00:00:00:00:C3"));
+		
+		ChannelOutput[] routerOuts1 = { chanR0_B.out(), chan2B.out()};
+		AltingChannelInput[] routerIns1 = { chan2A.in(), chanR0_A.in(),chanR1_A.in()};
+		
+		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1);
 		
 		
 		// Instanciacao do processo Hub os canais devidamente mapeados em
 		// arrays.
 		ChannelOutput[] hubOuts = { chan0A.out(), chan1A.out()};
 		AltingChannelInput[] hubIns = { chan0B.in(), chan1B.in()};
-
 		
-		
-		//CSProcess hub = new Hub(hubIns, hubOuts);
+		CSProcess hub = new Hub(hubIns, hubOuts);
 
 		// Instanciacao da console de comandos e associacao dos nodos com seus
 		// canais de comunicacao.
-		NodeChannelWrapper[] nodes = { new NodeChannelWrapper(node0, cons0.out()), new NodeChannelWrapper(node1, cons1.out())};
+		NodeChannelWrapper[] nodes = { new NodeChannelWrapper(node0, cons0.out()),new NodeChannelWrapper(node1, cons1.out()),new NodeChannelWrapper(node2, cons2.out())};
 		CSProcess console = new CommandConsole(nodes);
 
 		// Execucao dos processos em paralelo.
-		CSProcess[] processes = { node0, node1, router, console };
+		CSProcess[] processes = { node0, node1, node2, router,router1, console };
 		CSProcess simulator = new Parallel(processes);
 		simulator.run();
 	}
