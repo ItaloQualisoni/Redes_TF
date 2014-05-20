@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import org.jcsp.lang.AltingChannelInput;
 import org.jcsp.lang.CSProcess;
 import org.jcsp.lang.Channel;
@@ -60,7 +59,7 @@ public class Main {
 		rt.addRoute(new Route("00:00:00:00:00:D4", 2, macRouter1));
 		
 		ChannelOutput[] routerOuts = { chan0A.out(), chan1A.out(), chanR1.out()};
-		AltingChannelInput[] routerIns = { chan0B.in(), chan1B.in(),chanR0.in()};
+		AltingChannelInput[] routerIns = {chanR0.in(), chan0B.in(), chan1B.in()};
 		
 		CSProcess router = new Router("Roter R0", macRouter0, routerIns, routerOuts, rt);
 
@@ -70,8 +69,8 @@ public class Main {
 		rt1.addRoute(new Route("00:00:00:00:00:C3", 1, "00:00:00:00:00:C3"));
 		rt1.addRoute(new Route("00:00:00:00:00:D4", 2, "00:00:00:00:00:D4"));
 		
-		ChannelOutput[] routerOuts1 = { chanR0.out(), chan2A.out(),chan3A.out()};
-		AltingChannelInput[] routerIns1 = { chan3B.in(),chan2B.in(),chanR1.in()};
+		ChannelOutput[] routerOuts1     = {chanR0.out(), chan2A.out(),chan3A.out()};
+		AltingChannelInput[] routerIns1 = { chanR1.in(), chan3B.in(), chan2B.in() };
 		
 		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1);
 		
@@ -89,7 +88,7 @@ public class Main {
 		CSProcess console = new CommandConsole(nodes);
 
 		// Execucao dos processos em paralelo.
-		CSProcess[] processes = { node0, node1, node2,node3 ,router,router1, console };
+		CSProcess[] processes = { node0, node1, node2,node3 ,router,router1, console, };
 		CSProcess simulator = new Parallel(processes);
 		simulator.run();
 	}

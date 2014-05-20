@@ -30,6 +30,14 @@ public class Router implements CSProcess {
 		this.table = table;
 	}
 	
+	public String getHostName() {
+		return hostName;
+	}
+
+	public String getMacAddr() {
+		return macAddr;
+	}
+
 	/**
 	 * Realiza o encaminhamento dos pacote recebidos pela porta
 	 * <code>port</code> para as demais porta do hub, controlando para que o
@@ -55,7 +63,7 @@ public class Router implements CSProcess {
 	
 	@Override
 	public void run() {
-		System.out.println("Router Online.");
+		System.out.println(this.getHostName()+" Online.");
 		int port;
 		Packet pkt;
 		final Guard[] altChans = (Guard[]) in;
