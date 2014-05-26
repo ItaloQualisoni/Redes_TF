@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import org.jcsp.lang.Alternative;
 import org.jcsp.lang.AltingChannelInput;
 import org.jcsp.lang.CSProcess;
@@ -12,7 +14,6 @@ import org.jcsp.lang.Guard;
  * @author Ramon Costi Fernandes <ramon.fernandes@acad.pucrs.br>
  */
 public class Node implements CSProcess {
-
 	// Nome do host/nodo;
 	private String hostName;
 
@@ -25,9 +26,13 @@ public class Node implements CSProcess {
 	// Canal de entrada de comandos do nodo (via terminal);
 	private AltingChannelInput consoleIn;
 
-	// Canal de saida de dados do nodo;
-	private ChannelOutput out;
+	// Canal de saida de dados do nodo com o MTU;
+	private MTUOut out;
+	
+	//Buffer das mensagens;
+	private ArrayList<Packet> buffer = new ArrayList<>();
 
+	
 	/**
 	 * Cria um Nodo no ambiente de simulacao, atribuindo um nome
 	 * <code>hostName</code>, endereco MAC <code>macAddr</code>, e canais de
@@ -42,7 +47,7 @@ public class Node implements CSProcess {
 	 * @param out Porta de comunicacao para saida de dados originados deste
 	 *            nodo.
 	 */
-	public Node(String hostName, String macAddr, AltingChannelInput in, AltingChannelInput consoleIn, ChannelOutput out) {
+	public Node(String hostName, String macAddr, AltingChannelInput in, AltingChannelInput consoleIn, MTUOut out) {
 		super();
 		this.hostName = hostName;
 		this.macAddr = macAddr;
@@ -69,8 +74,8 @@ public class Node implements CSProcess {
 	 * @param msg Mensagem a ser encapsulada no pacote.
 	 */
 	private void sendMsg(String dstMacAddr, String msg) {
-		Packet pkt = new Packet(dstMacAddr, this.macAddr, msg);
-		out.write(pkt);
+		Packet pkt = new Packet(dstMacAddr, this.macAddr, msg,msg.length());
+		out.write(pkt,pkt.sizeFinal);
 	}
 
 	/**
@@ -87,6 +92,7 @@ public class Node implements CSProcess {
 			return true;
 		if (pkt.dstMacAddr.equalsIgnoreCase(Constants.macBcast))
 			return true;
+		
 		return false;
 	}
 
@@ -119,9 +125,29 @@ public class Node implements CSProcess {
 			break;
 		}
 	}
+	
+	private boolean isLastPacket(int sizeMsgFinal){
+		int count = 0;
+		for (Packet packet : buffer) {
+			count += packet.data.length();
+		}
+		return count == sizeMsgFinal;
+	}
+	
+	private String mergePacketBuffer(){
+		String data = "";
+		for (Packet packet : buffer) {
+			data += packet.data;
+		}
+		buffer = new ArrayList<>();
+		return data;
+	}
+	
 
 	@Override
 	public void run() {
+		String  buffData = "";
+		
 		System.out.println(this.hostName + " Online.");
 		Packet pkt;
 		CommandWrapper cmdw;
@@ -138,8 +164,19 @@ public class Node implements CSProcess {
 			// 1 Corresponde ao canal "in"
 			case 1:
 				pkt = (Packet) this.in.read();
-				if (checkPkt(pkt))
-					printPkt(pkt);
+				if (checkPkt(pkt)){
+					buffer.add(pkt);
+					if (pkt.isMoreFragment() == false) {
+						if (isLastPacket(pkt.sizeFinal)) {
+							buffData = this.mergePacketBuffer();
+							pkt.data = buffData;
+							printPkt(pkt);
+						}
+						else{
+							System.out.println("Ainda falta pacotes...");
+						}
+					}
+				}
 				break;
 			}
 		}

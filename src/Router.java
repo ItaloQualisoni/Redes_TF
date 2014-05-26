@@ -1,7 +1,6 @@
 import org.jcsp.lang.Alternative;
 import org.jcsp.lang.AltingChannelInput;
 import org.jcsp.lang.CSProcess;
-import org.jcsp.lang.ChannelOutput;
 import org.jcsp.lang.Guard;
 
 
@@ -16,11 +15,12 @@ public class Router implements CSProcess {
 	private AltingChannelInput[] in;
 
 	// Canais de saida do Hub
-	private ChannelOutput[] out;
+	private MTUOut[] out;
+	
 	//Tabela de roteamento
 	private RouterTable table;
 	
-	public Router(String hostName,String macAddr,AltingChannelInput[] in, ChannelOutput[] out,RouterTable table) {
+	public Router(String hostName,String macAddr,AltingChannelInput[] in, MTUOut[] out,RouterTable table) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.hostName = hostName;
@@ -51,13 +51,9 @@ public class Router implements CSProcess {
 	private void forwardPkts(Packet pkt) {
 		System.out.println("Roteador "+this.hostName);
 		System.out.println("Inicio do roteamento do pacote de "+pkt.data);
-		Route aux = table.getRoute(pkt.dstMacAddr);		
-		
-		if(aux==null){
-			return;
-		}
+		Route aux = table.getRoute(pkt.dstMacAddr);
 		System.out.println("Roteando para porta " + aux.getPort()+" com MAC "+aux.getDestination());
-		out[aux.getPort()].write(pkt);
+		out[aux.getPort()].write(pkt,pkt.sizeFinal);
 	}
 	
 	
