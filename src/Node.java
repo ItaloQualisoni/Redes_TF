@@ -18,7 +18,7 @@ public class Node implements CSProcess {
 	private String hostName;
 
 	// Endereco MAC do nodo;
-	private String macAddr;
+	private String ipAddr;
 
 	// Canal de entrada de dados do nodo;
 	private AltingChannelInput in;
@@ -47,10 +47,10 @@ public class Node implements CSProcess {
 	 * @param out Porta de comunicacao para saida de dados originados deste
 	 *            nodo.
 	 */
-	public Node(String hostName, String macAddr, AltingChannelInput in, AltingChannelInput consoleIn, MTUOut out) {
+	public Node(String hostName, String ipAddr, AltingChannelInput in, AltingChannelInput consoleIn, MTUOut out) {
 		super();
 		this.hostName = hostName;
-		this.macAddr = macAddr;
+		this.ipAddr = ipAddr;
 		this.in = in;
 		this.consoleIn = consoleIn;
 		this.out = out;
@@ -74,7 +74,7 @@ public class Node implements CSProcess {
 	 * @param msg Mensagem a ser encapsulada no pacote.
 	 */
 	private void sendMsg(String dstMacAddr, String msg) {
-		Packet pkt = new Packet(dstMacAddr, this.macAddr, msg,msg.length());
+		Packet pkt = new Packet(dstMacAddr, this.ipAddr, msg,msg.length());
 		out.write(pkt,pkt.sizeFinal);
 	}
 
@@ -88,7 +88,7 @@ public class Node implements CSProcess {
 	private boolean checkPkt(Packet pkt) {
 		if (pkt == null)
 			return false;
-		if (pkt.dstAddr.equalsIgnoreCase(this.macAddr))
+		if (pkt.dstAddr.equalsIgnoreCase(this.ipAddr))
 			return true;
 		if (pkt.dstAddr.equalsIgnoreCase(Constants.macBcast))
 			return true;
@@ -184,7 +184,7 @@ public class Node implements CSProcess {
 
 	@Override
 	public String toString() {
-		return String.format("[%s] - MAC: [%s]", hostName, macAddr);
+		return String.format("[%s] - IP: [%s]", hostName, ipAddr);
 	}
 
 }

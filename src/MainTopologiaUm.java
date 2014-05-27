@@ -58,8 +58,8 @@ public class MainTopologiaUm {
 		String[] routerIPports = {"10.0.1.2","10.0.2.2","10.0.10.1"};
 		
 		RouterTable rt = new RouterTable();
-		rt.addRoute(new Route("10.0.1.1", 0, "0.0.0.0"));
-		rt.addRoute(new Route("10.0.2.1", 1, "0.0.0.0"));
+		rt.addRoute(new Route("10.0.1.1", 0, routerIPports[0]));
+		rt.addRoute(new Route("10.0.2.1", 1, routerIPports[1]));
 		rt.addRoute(new Route("10.0.10.2",2 , "0.0.0.0"));
 		rt.addRoute(new Route("10.0.3.1", 2, routerIPports[2]));
 		rt.addRoute(new Route("10.0.4.1", 2, routerIPports[2]));
