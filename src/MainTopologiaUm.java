@@ -45,34 +45,43 @@ public class MainTopologiaUm {
 		//out() saí
 		
 		// Instanciacao dos processos Nodos.
-		CSProcess node0 = new Node("Node 1", "00:00:00:00:00:A1", chan0A.in(), cons0.in(), new MTUOut(20,chan0B.out()));
-		CSProcess node1 = new Node("Node 2", "00:00:00:00:00:B2", chan1A.in(), cons1.in(), new MTUOut(10,chan1B.out()));
-		CSProcess node2 = new Node("Node 3", "00:00:00:00:00:C3", chan2A.in(), cons2.in(), new MTUOut(15,chan2B.out()));
-		CSProcess node3 = new Node("Node 4", "00:00:00:00:00:D4", chan3A.in(), cons3.in(), new MTUOut(5,chan3B.out()));
+		CSProcess node0 = new Node("Node 1", "10.0.1.1", chan0A.in(), cons0.in(), new MTUOut(20,chan0B.out()));
+		CSProcess node1 = new Node("Node 2", "10.0.2.1", chan1A.in(), cons1.in(), new MTUOut(10,chan1B.out()));
+		CSProcess node2 = new Node("Node 3", "10.0.3.1", chan2A.in(), cons2.in(), new MTUOut(15,chan2B.out()));
+		CSProcess node3 = new Node("Node 4", "10.0.4.1", chan3A.in(), cons3.in(), new MTUOut(5,chan3B.out()));
 
 		//Tabela de roteamento
 		
-		RouterTable rt = new RouterTable();
-		rt.addRoute(new Route("00:00:00:00:00:A1", 0, "00:00:00:00:00:A1"));
-		rt.addRoute(new Route("00:00:00:00:00:B2", 1, "00:00:00:00:00:B2"));
-		rt.addRoute(new Route("00:00:00:00:00:C3", 2, macRouter1));
-		rt.addRoute(new Route("00:00:00:00:00:D4", 2, macRouter1));
-		
+
 		MTUOut[] routerOuts = { new MTUOut(20, chan0A.out()) ,new MTUOut(10,  chan1A.out()),new MTUOut(15, chanR1.out())};
-		AltingChannelInput[] routerIns = {chanR0.in(), chan0B.in(), chan1B.in()};
+		AltingChannelInput[] routerIns = {chan0B.in(), chan1B.in(),chanR0.in()};
+		String[] routerIPports = {"10.0.1.2","10.0.2.2","10.0.10.1"};
 		
-		CSProcess router = new Router("Roter R0", macRouter0, routerIns, routerOuts, rt);
+		RouterTable rt = new RouterTable();
+		rt.addRoute(new Route("10.0.1.1", 0, "0.0.0.0"));
+		rt.addRoute(new Route("10.0.2.1", 1, "0.0.0.0"));
+		rt.addRoute(new Route("10.0.10.2",2 , "0.0.0.0"));
+		rt.addRoute(new Route("10.0.3.1", 2, routerIPports[2]));
+		rt.addRoute(new Route("10.0.4.1", 2, routerIPports[2]));
+		
+		CSProcess router = new Router("Roter R0", macRouter0, routerIns, routerOuts, rt,routerIPports);
 
 		RouterTable rt1 = new RouterTable();
-		rt1.addRoute(new Route("00:00:00:00:00:A1", 0, macRouter0));
-		rt1.addRoute(new Route("00:00:00:00:00:B2", 0, macRouter0));
-		rt1.addRoute(new Route("00:00:00:00:00:C3", 1, "00:00:00:00:00:C3"));
-		rt1.addRoute(new Route("00:00:00:00:00:D4", 2, "00:00:00:00:00:D4"));
+
+		String[] routerIPports1 = {"10.0.3.2","10.0.4.2","10.0.10.2"};
 		
-		MTUOut[] routerOuts1 = {new MTUOut(15,chanR0.out()), new MTUOut(15,chan2A.out()),new MTUOut(5,chan3A.out())};
-		AltingChannelInput[] routerIns1 = { chanR1.in(), chan3B.in(), chan2B.in() };
+
+		rt1.addRoute(new Route("10.0.3.1", 0 , "0.0.0.0"));
+		rt1.addRoute(new Route("10.0.4.1", 1 , "0.0.0.0"));
+		rt1.addRoute(new Route("10.0.10.1",2 , "0.0.0.0"));
+		rt1.addRoute(new Route("10.0.1.1", 2 , routerIPports1[2]));
+		rt1.addRoute(new Route("10.0.2.1", 2 , routerIPports1[2]));
 		
-		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1);
+		MTUOut[] routerOuts1 = {new MTUOut(15,chan2A.out()),new MTUOut(5,chan3A.out()),new MTUOut(15,chanR0.out())};
+		AltingChannelInput[] routerIns1 = {chan3B.in(), chan2B.in(),chanR1.in()};
+
+		
+		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1,routerIPports1);
 		
 		
 		// Instanciacao do processo Hub os canais devidamente mapeados em

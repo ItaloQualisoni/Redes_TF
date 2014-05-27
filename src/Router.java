@@ -11,6 +11,9 @@ public class Router implements CSProcess {
 	// Endereco MAC do nodo;
 	private String macAddr;
 	
+	// Endereco MAC do nodo;
+	private String[] IPports;
+	
 	// Canais de entrada do Hub
 	private AltingChannelInput[] in;
 
@@ -20,7 +23,7 @@ public class Router implements CSProcess {
 	//Tabela de roteamento
 	private RouterTable table;
 	
-	public Router(String hostName,String macAddr,AltingChannelInput[] in, MTUOut[] out,RouterTable table) {
+	public Router(String hostName,String macAddr,AltingChannelInput[] in, MTUOut[] out,RouterTable table,String[] IPports) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.hostName = hostName;
@@ -28,6 +31,7 @@ public class Router implements CSProcess {
 		this.in = in;
 		this.out = out;
 		this.table = table;
+		this.IPports = IPports;
 	}
 	
 	public String getHostName() {
@@ -48,11 +52,11 @@ public class Router implements CSProcess {
 	 */
 	
 	
-	private void forwardPkts(Packet pkt) {
+	private void forwardPkts(Packet pkt,int port) {
 		System.out.println("Roteador "+this.hostName);
-		System.out.println("Inicio do roteamento do pacote de "+pkt.data);
-		Route aux = table.getRoute(pkt.dstMacAddr);
-		System.out.println("Roteando para porta " + aux.getPort()+" com MAC "+aux.getDestination());
+		//System.out.println("Inicio do roteamento do dado "+pkt.data + " recebido na porta "+(port+1) + " de IP: "+ IPports[port]);
+		Route aux = table.getRoute(pkt.dstAddr);
+		System.out.println("Roteando para porta " + (aux.getPort()+1)+" com IP "+IPports[aux.getPort()]);
 		out[aux.getPort()].write(pkt,pkt.sizeFinal);
 	}
 	
@@ -72,7 +76,8 @@ public class Router implements CSProcess {
 			// atendidos. Mesma ideia utilizada num RoundRobin.
 			port = alt.fairSelect();
 			pkt = (Packet) in[port].read();
-			forwardPkts(pkt);
+			System.out.println("[From : "+pkt.srcAddr+" To: "+IPports[port]+" Data: "+pkt.data+" ]");
+			forwardPkts(pkt,port);
 		}
 	}
 	

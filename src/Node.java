@@ -88,9 +88,9 @@ public class Node implements CSProcess {
 	private boolean checkPkt(Packet pkt) {
 		if (pkt == null)
 			return false;
-		if (pkt.dstMacAddr.equalsIgnoreCase(this.macAddr))
+		if (pkt.dstAddr.equalsIgnoreCase(this.macAddr))
 			return true;
-		if (pkt.dstMacAddr.equalsIgnoreCase(Constants.macBcast))
+		if (pkt.dstAddr.equalsIgnoreCase(Constants.macBcast))
 			return true;
 		
 		return false;
@@ -102,7 +102,7 @@ public class Node implements CSProcess {
 	 * @param pkt Objeto {@link Packet} com a mensagem a ser impressa.
 	 */
 	private void printPkt(Packet pkt) {
-		System.out.printf("[%s] received : %s, from [%s]\n", this.hostName, pkt.data, pkt.srcMacAddr);
+		System.out.printf("[%s] received : %s, from [%s]\n", this.hostName, pkt.data, pkt.srcAddr);
 	}
 
 	/**

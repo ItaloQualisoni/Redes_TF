@@ -7,8 +7,8 @@
  */
 public class Packet {
 
-	public String dstMacAddr;
-	public String srcMacAddr;
+	public String dstAddr;
+	public String srcAddr;
 	public String data;
 	public boolean moreFragment = false;
 	public int sizeFinal;
@@ -21,17 +21,17 @@ public class Packet {
 	 * @param srcMacAddr Endereco MAC origem a ser preenchido no pacote.
 	 * @param data Dados que devem ser encapsulados no pacote.
 	 */
-	public Packet(String dstMacAddr, String srcMacAddr, String data, int size) {
+	public Packet(String dstAddr, String srcAddr, String data, int size) {
 		super();
-		this.dstMacAddr = dstMacAddr;
-		this.srcMacAddr = srcMacAddr;
+		this.dstAddr = dstAddr;
+		this.srcAddr = srcAddr;
 		this.data = data;
 		this.sizeFinal=size;
 	}
 
 	@Override
 	public String toString() {
-		return "Packet [dstMacAddr=" + dstMacAddr + ", srcMacAddr=" + srcMacAddr + ", data=" + data + "]";
+		return "Packet [dstMacAddr=" + dstAddr + ", srcMacAddr=" + srcAddr + ", data=" + data + "]";
 	}
 	public void setMoreFragment(boolean hasMoreFragment){
 		this.moreFragment = hasMoreFragment;
