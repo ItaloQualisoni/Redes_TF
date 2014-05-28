@@ -74,8 +74,8 @@ public class Node implements CSProcess {
 	 * @param msg Mensagem a ser encapsulada no pacote.
 	 */
 	private void sendMsg(String dstMacAddr, String msg) {
-		Packet pkt = new Packet(dstMacAddr, this.ipAddr, msg,msg.length());
-		out.write(pkt,pkt.sizeFinal);
+		Packet pkt = new Packet(dstMacAddr, this.ipAddr, msg,msg.length(),0);
+		out.write(pkt);
 	}
 
 	/**
@@ -126,29 +126,23 @@ public class Node implements CSProcess {
 		}
 	}
 	
-	private boolean isLastPacket(int sizeMsgFinal){
-		int count = 0;
+	private String mergePacketBuffer(int size){
+		char[] data = new char[size];
+		char[] aux ;
 		for (Packet packet : buffer) {
-			count += packet.data.length();
-		}
-		return count == sizeMsgFinal;
-	}
-	
-	private String mergePacketBuffer(){
-		String data = "";
-		for (Packet packet : buffer) {
-			data += packet.data;
+			System.out.println(packet.offset+"........ "+packet.data);
+			aux = packet.data.toCharArray();
+			for (int i = 0; i < aux.length; i++) {
+				data[packet.getOffset()+i] = aux[i];
+			}
 		}
 		buffer = new ArrayList<>();
-		return data;
+		return String.valueOf(data);
 	}
 	
 
 	@Override
 	public void run() {
-		String  buffData = "";
-		int     buffsize = 0;
-		
 		System.out.println(this.hostName + " Online.");
 		Packet pkt;
 		CommandWrapper cmdw;
@@ -167,17 +161,12 @@ public class Node implements CSProcess {
 				pkt = (Packet) this.in.read();
 				if (checkPkt(pkt)){
 					buffer.add(pkt);
-					buffsize = buffsize + pkt.data.length();
-					if (pkt.isMoreFragment() == false) {
-						if (buffsize  == pkt.sizeFinal) {
-							buffData = this.mergePacketBuffer();
-							pkt.data = buffData;
-							printPkt(pkt);
-							buffsize = 0;
-						}
-						else{
-							System.out.println("Ainda falta pacotes "+(pkt.sizeFinal-buffsize) + " dados");
-						}
+					System.out.println("Chegou pacote de offset "+ pkt.getOffset());
+					if(pkt.lastFragment){
+						String buffData = this.mergePacketBuffer(pkt.sizeFinal);
+						System.out.println("buff data "+ buffData);
+						pkt.data = buffData;
+						printPkt(pkt);
 					}
 				}
 				break;

@@ -57,7 +57,7 @@ public class Router implements CSProcess {
 		//System.out.println("Inicio do roteamento do dado "+pkt.data + " recebido na porta "+(port+1) + " de IP: "+ IPports[port]);
 		Route aux = table.getRoute(pkt.dstAddr);
 		System.out.println("Roteando para porta " + (aux.getPort()+1)+" com IP "+IPports[aux.getPort()]);
-		out[aux.getPort()].write(pkt,pkt.sizeFinal);
+		out[aux.getPort()].write(pkt);
 	}
 	
 	
