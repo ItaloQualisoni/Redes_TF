@@ -147,6 +147,7 @@ public class Node implements CSProcess {
 	@Override
 	public void run() {
 		String  buffData = "";
+		int     buffsize = 0;
 		
 		System.out.println(this.hostName + " Online.");
 		Packet pkt;
@@ -166,14 +167,16 @@ public class Node implements CSProcess {
 				pkt = (Packet) this.in.read();
 				if (checkPkt(pkt)){
 					buffer.add(pkt);
+					buffsize = buffsize + pkt.data.length();
 					if (pkt.isMoreFragment() == false) {
-						if (isLastPacket(pkt.sizeFinal)) {
+						if (buffsize  == pkt.sizeFinal) {
 							buffData = this.mergePacketBuffer();
 							pkt.data = buffData;
 							printPkt(pkt);
+							buffsize = 0;
 						}
 						else{
-							System.out.println("Ainda falta pacotes...");
+							System.out.println("Ainda falta pacotes "+(pkt.sizeFinal-buffsize) + " dados");
 						}
 					}
 				}

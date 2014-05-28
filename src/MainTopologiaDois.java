@@ -82,7 +82,7 @@ public class MainTopologiaDois {
 		rt2.addRoute(new Route("10.0.2.1", 0 , routerIPports2[0]));
 		rt2.addRoute(new Route("10.0.3.1", 1 , routerIPports2[1]));
 		rt2.addRoute(new Route("10.0.4.1", 2 , routerIPports2[2]));
-		rt2.addRoute(new Route("10.0.10.1",2 , "0.0.0.0"));
+		rt2.addRoute(new Route("10.0.10.1",1 , "0.0.0.0"));
 		rt2.addRoute(new Route("10.0.20.1",2 , "0.0.0.0"));
 		
 		CSProcess router2 = new Router("Roter R2", macRouter2,routerIns2 , routerOuts2, rt2,routerIPports2);

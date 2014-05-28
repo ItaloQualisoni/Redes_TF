@@ -32,14 +32,13 @@ public class MTUOut {
 			aux2.setMoreFragment(true);
 			
 			System.out.println("Fragmentando mensagem: ");
-			System.out.println("pacote 1 "+ aux.data);
-			System.out.println("pacote 2 "+ aux2.data);
-			System.out.println("Enviando pacotes");
+			System.out.println("Enviando pacote 1: "+aux.data);
+			System.out.println("Empilhando pacote 2: "+ aux2.data);
 			out.write(aux);
 			this.write(aux2,sizeMsgFinal);
 		}else{
 			pkt.setMoreFragment(false);
-			System.out.println("Enviando pacote");
+			System.out.println("Enviando pacote final");
 			out.write(pkt);
 		}
 	}

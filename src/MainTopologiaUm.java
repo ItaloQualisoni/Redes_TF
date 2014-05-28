@@ -79,17 +79,10 @@ public class MainTopologiaUm {
 		
 		MTUOut[] routerOuts1 = {new MTUOut(15,chan2A.out()),new MTUOut(5,chan3A.out()),new MTUOut(15,chanR0.out())};
 		AltingChannelInput[] routerIns1 = {chan3B.in(), chan2B.in(),chanR1.in()};
-
 		
 		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1,routerIPports1);
 		
 		
-		// Instanciacao do processo Hub os canais devidamente mapeados em
-		// arrays.
-		ChannelOutput[] hubOuts = { chan0A.out(), chan1A.out()};
-		AltingChannelInput[] hubIns = { chan0B.in(), chan1B.in()};
-		
-		CSProcess hub = new Hub(hubIns, hubOuts);
 
 		// Instanciacao da console de comandos e associacao dos nodos com seus
 		// canais de comunicacao.

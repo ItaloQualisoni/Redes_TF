@@ -53,7 +53,7 @@ public class Router implements CSProcess {
 	
 	
 	private void forwardPkts(Packet pkt,int port) {
-		System.out.println("Roteador "+this.hostName);
+		System.out.println("Roteador "+this.hostName+ " recebeu o pacote com dados \""+ pkt.data + "\" atraves da porta " + (port+1));
 		//System.out.println("Inicio do roteamento do dado "+pkt.data + " recebido na porta "+(port+1) + " de IP: "+ IPports[port]);
 		Route aux = table.getRoute(pkt.dstAddr);
 		System.out.println("Roteando para porta " + (aux.getPort()+1)+" com IP "+IPports[aux.getPort()]);
@@ -76,7 +76,6 @@ public class Router implements CSProcess {
 			// atendidos. Mesma ideia utilizada num RoundRobin.
 			port = alt.fairSelect();
 			pkt = (Packet) in[port].read();
-			System.out.println("[From : "+pkt.srcAddr+" To: "+IPports[port]+" Data: "+pkt.data+" ]");
 			forwardPkts(pkt,port);
 		}
 	}
