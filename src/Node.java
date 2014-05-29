@@ -130,7 +130,6 @@ public class Node implements CSProcess {
 		char[] data = new char[size];
 		char[] aux ;
 		for (Packet packet : buffer) {
-			System.out.println(packet.offset+"........ "+packet.data);
 			aux = packet.data.toCharArray();
 			for (int i = 0; i < aux.length; i++) {
 				data[packet.getOffset()+i] = aux[i];
@@ -161,10 +160,8 @@ public class Node implements CSProcess {
 				pkt = (Packet) this.in.read();
 				if (checkPkt(pkt)){
 					buffer.add(pkt);
-					System.out.println("Chegou pacote de offset "+ pkt.getOffset());
 					if(pkt.lastFragment){
 						String buffData = this.mergePacketBuffer(pkt.sizeFinal);
-						System.out.println("buff data "+ buffData);
 						pkt.data = buffData;
 						printPkt(pkt);
 					}
