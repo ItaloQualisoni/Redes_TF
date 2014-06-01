@@ -19,7 +19,7 @@ public class Constants {
 	public static final int tracertCmd = 2;
 
 	// Lista com os possiveis comandos a serem executados
-	public static final Commands[] cmds = { Commands.SENDMSG, Commands.PING, Commands.TRACERT };
+	public static final Commands[] cmds = { Commands.SENDMSG};
 
 	// Tempo de sleep para os prints (em milisegundos)
 	public static final int sleepTime = 250;

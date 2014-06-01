@@ -102,7 +102,7 @@ public class Node implements CSProcess {
 	 * @param pkt Objeto {@link Packet} com a mensagem a ser impressa.
 	 */
 	private void printPkt(Packet pkt) {
-		System.out.printf("[%s] received : %s, from [%s]\n", this.hostName, pkt.data, pkt.srcAddr);
+		System.out.printf("[%s] received : %s, from [%s] \n\n0", this.hostName, pkt.data, pkt.srcAddr);
 	}
 
 	/**

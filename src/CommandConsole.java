@@ -117,16 +117,6 @@ public class CommandConsole implements CSProcess {
 		}
 	}
 
-	private void pingCmd(ChannelOutput channel) {
-		// TODO (voces nao pensaram que isso seria dado de graca para voces,
-		// certo?)
-		System.out.println("Este comando nao foi implementado. Noites de sono serao perdidas aqui.");
-	}
-
-	private void tracertCmd(ChannelOutput channel) {
-		// TODO (muito menos isso daqui...)
-		System.out.println("Este comando nao foi implementado. Muitas outras noites de sono serao perdidas aqui.");
-	}
 
 	/**
 	 * Metodo para executar um comando. Todos os comandos possiveis para
@@ -140,12 +130,6 @@ public class CommandConsole implements CSProcess {
 		switch (cmd) {
 		case Constants.sendMsgCmd:
 			sendMsg(outChannel);
-			break;
-		case Constants.pingCmd:
-			pingCmd(outChannel);
-			break;
-		case Constants.tracertCmd:
-			tracertCmd(outChannel);
 			break;
 		default:
 			System.out.println("Comando invalido: " + cmd);
