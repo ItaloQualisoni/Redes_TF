@@ -38,8 +38,8 @@ public class MainTopologiaUm {
 		final One2OneChannel chanR1 = Channel.one2one();
 
 		
-		String macRouter0 = "00:00:00:00:00:R0";
-		String macRouter1 = "00:00:00:00:00:R1";
+		String macRouter = "00:00:00:00:00:R1";
+		String macRouter1 = "00:00:00:00:00:R2";
 		
 		//in() entra
 		//out() saí
@@ -64,7 +64,7 @@ public class MainTopologiaUm {
 		rt.addRoute(new Route("10.0.3.1", 2, routerIPports[2]));
 		rt.addRoute(new Route("10.0.4.1", 2, routerIPports[2]));
 		
-		CSProcess router = new Router("Roter R0", macRouter0, routerIns, routerOuts, rt,routerIPports);
+		CSProcess router = new Router("Roter R1", macRouter, routerIns, routerOuts, rt,routerIPports);
 
 		RouterTable rt1 = new RouterTable();
 
@@ -80,7 +80,7 @@ public class MainTopologiaUm {
 		MTUOut[] routerOuts1 = {new MTUOut(15,chan2A.out()),new MTUOut(5,chan3A.out()),new MTUOut(15,chanR0.out())};
 		AltingChannelInput[] routerIns1 = {chan3B.in(), chan2B.in(),chanR1.in()};
 		
-		CSProcess router1 = new Router("Roter R1", macRouter1,routerIns1 , routerOuts1, rt1,routerIPports1);
+		CSProcess router1 = new Router("Roter R2", macRouter1,routerIns1 , routerOuts1, rt1,routerIPports1);
 		
 		
 
